@@ -20,23 +20,13 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
-from dealers.views import NetworkNodeViewSet
+from dealers.views import HomePageView, NetworkNodeViewSet
 
 router = DefaultRouter()
 router.register("network-nodes", NetworkNodeViewSet, basename="network-node")
 
 urlpatterns = [
-    path(
-        "",
-        TemplateView.as_view(
-            template_name="landing.html",
-            extra_context={
-                "admin_url": "/admin/",
-                "api_url": "/api/network-nodes/",
-            },
-        ),
-        name="home",
-    ),
+    path("", HomePageView.as_view(), name="home"),
     path("network/", include(("dealers.urls", "dealers"), namespace="dealers")),
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
