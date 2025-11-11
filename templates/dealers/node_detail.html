@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}{{ node.name }} · SALE Tech{% endblock %}
+
+{% block content %}
+  <article class="card" style="display: grid; gap: 24px">
+    <header>
+      <span class="tag">Уровень {{ node.level }}</span>
+      <h1 style="margin: 12px 0 6px">{{ node.name }}</h1>
+      <p style="margin: 0; color: var(--text-muted)">
+        {{ node.city }}, {{ node.country }}
+      </p>
+    </header>
+
+    <section>
+      <h2 style="margin-bottom: 12px; font-size: 1.05rem">Поставщик</h2>
+      {% if node.supplier %}
+        <p style="margin: 0">
+          <a href="{% url 'dealers:node-detail' node.supplier.pk %}">{{ node.supplier.name }}</a>
+        </p>
+      {% else %}
+        <p style="margin: 0; color: var(--text-muted)">Прямой производитель (уровень 0)</p>
+      {% endif %}
+    </section>
+
+    <section class="grid grid-2" style="gap: 12px">
+      <div>
+        <h3 style="margin-bottom: 6px; font-size: 0.95rem; color: var(--text-muted)">Контакты</h3>
+        <p style="margin: 0 0 4px">{{ node.email }}</p>
+        <p style="margin: 0">
+          {{ node.country }}, {{ node.city }}, {{ node.street }} {{ node.house_number }}
+        </p>
+      </div>
+      <div>
+        <h3 style="margin-bottom: 6px; font-size: 0.95rem; color: var(--text-muted)">Финансы</h3>
+        <p style="margin: 0">
+          Задолженность: <strong>{{ node.debt }} ₽</strong>
+        </p>
+        <p style="margin: 0; color: var(--text-muted)">
+          Создано: {{ node.created_at|date:"d.m.Y H:i" }}
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2 style="margin-bottom: 12px; font-size: 1.05rem">Продукты</h2>
+      {% if node.products.count %}
+        <table>
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>Модель</th>
+              <th>Дата выхода</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in node.products.all %}
+              <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.model }}</td>
+                <td>{{ product.release_date|date:"d.m.Y" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p style="margin: 0; color: var(--text-muted)">
+          Для этого звена пока не добавлены продукты.
+        </p>
+      {% endif %}
+    </section>
+
+    <section>
+      <h2 style="margin-bottom: 12px; font-size: 1.05rem">Клиенты</h2>
+      {% if node.clients.count %}
+        <div class="grid grid-2">
+          {% for client in node.clients.all %}
+            <div style="padding: 16px; border-radius: 12px; border: 1px solid var(--border)">
+              <h3 style="margin: 0 0 4px; font-size: 1rem">
+                <a href="{% url 'dealers:node-detail' client.pk %}">{{ client.name }}</a>
+              </h3>
+              <p style="margin: 0; color: var(--text-muted)">{{ client.city }}, {{ client.country }}</p>
+              <p style="margin: 8px 0 0">
+                Задолженность: <strong>{{ client.debt }} ₽</strong>
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="margin: 0; color: var(--text-muted)">Клиенты не привязаны.</p>
+      {% endif %}
+    </section>
+  </article>
+{% endblock %}
+

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}API Документация · SALE Tech{% endblock %}
+
+{% block content %}
+  <section class="card" style="display: grid; gap: 24px">
+    <header>
+      <span class="tag">REST API</span>
+      <h1 style="margin: 12px 0 6px">Документация по API</h1>
+      <p style="margin: 0; color: var(--text-muted)">
+        Все запросы требуют аутентификации активного сотрудника. Используйте куки-сессию (логин через /api/auth/login/) или Basic Auth.
+      </p>
+    </header>
+
+    <section style="display: grid; gap: 18px">
+      {% for endpoint in endpoints %}
+        <div style="border: 1px solid var(--border); border-radius: 12px; padding: 16px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+            <span class="tag" style="background: rgba(255, 255, 255, 0.06)">{{ endpoint.method }}</span>
+            <code style="color: var(--accent)">{{ endpoint.path }}</code>
+          </div>
+          <p style="margin: 12px 0 0; color: var(--text-muted)">{{ endpoint.description }}</p>
+        </div>
+      {% endfor %}
+    </section>
+
+    <section>
+      <h2 style="margin-bottom: 12px; font-size: 1.05rem">Примеры запросов</h2>
+      <pre style="background: #131317; padding: 16px; border-radius: 12px; overflow-x: auto">
+curl -X POST http://127.0.0.1:8000/api/network-nodes/ \
+  -u staff_user:password123 \
+  -H "Content-Type: application/json" \
+  -d '{
+        "name": "Retail Chain",
+        "email": "retail@example.com",
+        "country": "Germany",
+        "city": "Hamburg",
+        "street": "Commerce Ave",
+        "house_number": "10",
+        "supplier": 1,
+        "debt": "1500.50"
+      }'
+      </pre>
+      <p style="margin: 12px 0 0; color: var(--text-muted)">
+        Для просмотра и тестирования можно использовать автоматический интерфейс DRF:
+        <a href="/api/network-nodes/">/api/network-nodes/</a>
+      </p>
+    </section>
+  </section>
+{% endblock %}
+

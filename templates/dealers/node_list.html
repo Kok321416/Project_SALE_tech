@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Поставщики · SALE Tech{% endblock %}
+
+{% block content %}
+  <section class="card" style="display: grid; gap: 18px">
+    <header>
+      <span class="tag">Каталог звеньев</span>
+      <h1 style="margin: 12px 0 6px">Поставщики и партнёры</h1>
+      <p style="margin: 0; color: var(--text-muted)">
+        Отображаются все элементы сети. Уровень определяется количеством цепочек от поставщика.
+      </p>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Уровень</th>
+          <th>Город</th>
+          <th>Страна</th>
+          <th>Поставщик</th>
+          <th>Задолженность</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for node in nodes %}
+          <tr>
+            <td>
+              <a href="{% url 'dealers:node-detail' node.pk %}">{{ node.name }}</a>
+            </td>
+            <td><span class="tag">Уровень {{ node.level }}</span></td>
+            <td>{{ node.city }}</td>
+            <td>{{ node.country }}</td>
+            <td>
+              {% if node.supplier %}
+                <a href="{% url 'dealers:node-detail' node.supplier.pk %}">{{ node.supplier.name }}</a>
+              {% else %}
+                <span style="color: var(--text-muted)">—</span>
+              {% endif %}
+            </td>
+            <td>{{ node.debt }} ₽</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" style="padding: 36px; text-align: center; color: var(--text-muted)">
+              Пока нет данных. Добавьте завод в админке и создайте цепочку поставок.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
+
