@@ -3,36 +3,120 @@
 {% block title %}Главная · SALE Tech{% endblock %}
 
 {% block content %}
-  <section class="card" style="display: grid; gap: 18px">
-    <header>
+  <section class="card" style="display: grid; gap: 24px">
+    <header style="display: grid; gap: 12px">
       <span class="tag">Онлайн-платформа</span>
-      <h1 style="margin: 12px 0 6px">SALE Tech Trading Network</h1>
-      <p style="color: var(--text-muted); margin: 0">
-        Иерархическая сеть поставщиков электроники: заводы, розничные сети и индивидуальные предприниматели.
-      </p>
+      <div>
+        <h1 style="margin: 0 0 6px; font-size: 2rem">SALE Tech Trading Network</h1>
+        <p style="color: var(--text-muted); margin: 0; font-size: 1.05rem; line-height: 1.7">
+          Единая система управления цепочкой поставщиков электроники: от завода до предпринимателя.
+          Отслеживайте уровни иерархии, задолженность и ассортимент устройств через удобный интерфейс и API.
+        </p>
+      </div>
+      <div class="grid grid-2" style="gap: 18px">
+        <div>
+          <h3 style="margin-bottom: 10px">Быстрый старт</h3>
+          <ol style="margin: 0; padding-left: 20px; color: var(--text-muted); line-height: 1.6">
+            <li>Создайте учётную запись или войдите как активный сотрудник.</li>
+            <li>Добавьте завод (уровень 0) и розничные звенья в админ-панели.</li>
+            <li>Заполните каталог товаров и настройте отношения поставщик → клиент.</li>
+          </ol>
+        </div>
+        <div>
+          <h3 style="margin-bottom: 10px">Полезные ссылки</h3>
+          <p style="margin: 0 0 6px">• Админ-панель: <a href="{{ admin_url }}">{{ admin_url }}</a></p>
+          <p style="margin: 0 0 6px">• REST API: <a href="{{ api_url }}">{{ api_url }}</a></p>
+          <p style="margin: 0">• Документация API: <a href="/api/docs/">/api/docs/</a></p>
+        </div>
+      </div>
     </header>
-    <div class="grid grid-2">
-      <div>
-        <h3>Ключевые ссылки</h3>
-        <p>• Админ-панель: <a href="{{ admin_url }}">{{ admin_url }}</a></p>
-        <p>• REST API: <a href="{{ api_url }}">{{ api_url }}</a></p>
-        <p>• Документация API: <a href="/api/docs/">/api/docs/</a></p>
+
+    <section class="grid" style="gap: 18px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+        {% for stat in stats_cards %}
+          <div style="border: 1px solid var(--border); border-radius: 16px; padding: 20px">
+            <p style="margin: 0; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem">
+              {{ stat.title }}
+            </p>
+            <p style="margin: 6px 0 0; font-size: 2rem; font-weight: 600">{{ stat.value }}</p>
+            <p style="margin: 4px 0 0; color: var(--text-muted)">{{ stat.description }}</p>
+          </div>
+        {% endfor %}
+    </section>
+
+    <section style="display: grid; gap: 12px">
+      <h2 style="margin: 0">Структура сети</h2>
+      <div class="grid grid-2" style="gap: 16px">
+        {% for level in level_cards %}
+          <div style="padding: 18px; border-radius: 14px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.02)">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+              <h3 style="margin: 0">{{ level.title }}</h3>
+              <span class="tag">{{ level.count }}</span>
+            </div>
+            <p style="margin: 12px 0 0; color: var(--text-muted)">{{ level.description }}</p>
+          </div>
+        {% endfor %}
       </div>
-      <div>
-        <h3>Быстрый старт</h3>
-        <p style="margin: 0 0 6px">1. Авторизуйтесь под активным сотрудником.</p>
-        <p style="margin: 0 0 6px">2. Создайте звено сети (завод/сеть/ИП).</p>
-        <p style="margin: 0">3. Добавьте товары и настройте цепочку поставщиков.</p>
-      </div>
-    </div>
-    <div>
-      <h3>Что реализовано</h3>
-      <ul style="margin: 0; padding-left: 22px; color: var(--text-muted)">
-        <li>Трёхуровневая иерархия поставщиков с контролем задолженности.</li>
-        <li>Гибкая фильтрация, поиск и сортировка в API.</li>
-        <li>Тёмная тема для пользовательских страниц.</li>
+    </section>
+
+    <section style="display: grid; gap: 12px">
+      <h2 style="margin: 0">Обзор возможностей</h2>
+      <ul style="margin: 0; padding-left: 22px; color: var(--text-muted); line-height: 1.65">
+        <li>Трёхуровневая иерархия с контролем глубины и предотвращением циклов поставок.</li>
+        <li>Мониторинг задолженности с опцией очистки через admin action.</li>
+        <li>Каталог устройств и фильтрация по странам, городам и атрибутам.</li>
+        <li>Авторизованный REST API с возможностью поиска и сортировки.</li>
       </ul>
-    </div>
+    </section>
+
+    {% if has_network %}
+      <section style="display: grid; gap: 12px">
+        <h2 style="margin: 0">Демонстрационная цепочка</h2>
+        <p style="margin: 0; color: var(--text-muted)">
+          Эти данные создаются автоматически при миграции, чтобы можно было сразу изучить интерфейс.
+        </p>
+        <div class="grid grid-2" style="gap: 16px">
+          {% for node in featured_nodes %}
+            <div style="padding: 20px; border-radius: 16px; border: 1px solid var(--border)">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+                <a href="{% url 'dealers:node-detail' node.pk %}" style="font-size: 1.1rem; font-weight: 600">{{ node.name }}</a>
+                <span class="tag">Уровень {{ node.level }}</span>
+              </div>
+              <p style="margin: 6px 0 0; color: var(--text-muted)">{{ node.city }}, {{ node.country }}</p>
+              <p style="margin: 12px 0 0">
+                Поставщик:
+                {% if node.supplier %}
+                  <a href="{% url 'dealers:node-detail' node.supplier.pk %}">{{ node.supplier.name }}</a>
+                {% else %}
+                  <span style="color: var(--text-muted)">прямой производитель</span>
+                {% endif %}
+              </p>
+              <p style="margin: 4px 0 0; color: var(--text-muted)">Товаров: {{ node.products.all|length }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    {% else %}
+      <section style="display: grid; gap: 12px">
+        <h2 style="margin: 0">Начните с создания первого завода</h2>
+        <p style="margin: 0; color: var(--text-muted)">
+          После применения миграций добавьте базовое звено в админке, чтобы построить иерархию сети.
+        </p>
+      </section>
+    {% endif %}
+
+    <section style="display: grid; gap: 12px">
+      <h2 style="margin: 0">Работа с API</h2>
+      <p style="margin: 0; color: var(--text-muted)">
+        Все запросы выполняются от имени активного сотрудника. Используйте <a href="{{ api_url }}">{{ api_url }}</a>
+        для интерактивного просмотра данных или отправьте запросы через curl/Postman.
+      </p>
+      <pre style="background: #131317; padding: 16px; border-radius: 12px; overflow-x: auto; margin: 0">
+curl -u staff_user:password123 {{ api_url }}?country=Germany
+      </pre>
+      <p style="margin: 0; color: var(--text-muted)">
+        Подробная документация и примеры находятся на странице <a href="/api/docs/">/api/docs/</a>.
+      </p>
+    </section>
   </section>
 {% endblock %}
 
